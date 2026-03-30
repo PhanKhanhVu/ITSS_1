@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Notification Center</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      padding: 40px 0;
+    }
+    
+    /* Reuse sidebar from 6_my_page.html (simulated here) */
+    .profile-sidebar { background: var(--bg-surface); border-radius: var(--border-radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); height: fit-content; }
+    .nav-menu { padding: 16px 0; }
+    .nav-menu a { display: flex; align-items: center; padding: 16px 24px; color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 15px; border-left: 3px solid transparent; }
+    .nav-menu a i { width: 24px; font-size: 18px; color: var(--text-secondary); margin-right: 12px; }
+    .nav-menu a:hover { background: var(--bg-main); }
+    .nav-menu a.active { color: var(--primary); border-left-color: var(--primary); background: rgba(218,41,28,0.03); }
+    .nav-menu a.active i { color: var(--primary); }
+
+    .main-block {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 20px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .notification-item:last-child { border-bottom: none; }
+    
+    .notification-item.unread {
+      background: rgba(218, 41, 28, 0.02);
+      border-radius: var(--border-radius-md);
+      padding: 24px;
+      margin: 0 -24px;
+      border-bottom: none;
+    }
+
+    .noti-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    
+    .icon-success { background: rgba(39, 174, 96, 0.1); color: var(--accent-green); }
+    .icon-coupon { background: rgba(255, 184, 0, 0.1); color: var(--accent-gold); }
+    .icon-system { background: var(--bg-main); color: var(--text-secondary); }
+
+    .noti-content { flex: 1; }
+    
+    .noti-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+      margin-top: 19px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container d-flex align-items-center justify-content-between h-100">
+      <div class="d-flex align-items-center gap-3">
+        <a href="1_home.html" class="nav-brand"><i class="fa-solid fa-bowl-rice"></i> JP Food</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container animate-fade-in">
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar -->
+      <aside>
+        <div class="profile-sidebar">
+          <div class="nav-menu font-jp">
+            <a href="6_my_page.html"><i class="fa-solid fa-user"></i> プロフィール</a>
+            <a href="#"><i class="fa-regular fa-calendar-check"></i> 予約履歴</a>
+            <a href="8_coupon_list.html"><i class="fa-solid fa-ticket"></i> クーポン</a>
+            <a href="7_notification_center.html" class="active"><i class="fa-regular fa-bell"></i> お知らせ</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main>
+        <div class="main-block">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-h2 font-jp">🔔 お知らせ</h2>
+            <button class="btn btn-secondary font-jp" style="padding: 8px 16px; font-size:13px;">すべて既読にする</button>
+          </div>
+
+          <div class="notification-list">
+            
+            <div class="notification-item unread">
+              <div class="noti-icon icon-success"><i class="fa-solid fa-calendar-check"></i></div>
+              <div class="noti-content">
+                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                  <h3 class="text-h3 font-jp">予約が確定しました！</h3>
+                  <span class="text-small font-jp" style="color:var(--text-secondary);">1時間前</span>
+                </div>
+                <p class="text-body font-jp" style="color:var(--text-main); margin-bottom:12px;">【Phở Bát Đàn】3月16日(火) 19:00〜 4名様でのご予約が店舗により承認されました。ご来店をお待ちしております。</p>
+                <button class="btn btn-primary font-jp" style="padding: 8px 24px; font-size:14px;">予約詳細を見る</button>
+              </div>
+              <div class="noti-dot"></div>
+            </div>
+
+            <div class="notification-item">
+              <div class="noti-icon icon-coupon"><i class="fa-solid fa-ticket"></i></div>
+              <div class="noti-content">
+                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                  <h3 class="text-h3 font-jp" style="font-weight:600;">新しいクーポンが届きました</h3>
+                  <span class="text-small font-jp" style="color:var(--text-secondary);">昨日</span>
+                </div>
+                <p class="text-body font-jp" style="color:var(--text-secondary);">【Bun Cha Huong Lien】日本人駐在員限定！生ビール1杯無料クーポンをプレゼント。</p>
+              </div>
+            </div>
+
+            <div class="notification-item">
+              <div class="noti-icon icon-system"><i class="fa-solid fa-circle-info"></i></div>
+              <div class="noti-content">
+                <div class="d-flex justify-content-between align-items-baseline mb-1">
+                  <h3 class="text-h3 font-jp" style="font-weight:600;">アプリが新しくなりました！</h3>
+                  <span class="text-small font-jp" style="color:var(--text-secondary);">3日前</span>
+                </div>
+                <p class="text-body font-jp" style="color:var(--text-secondary);">検索機能がより使いやすくアップデートされました。接待向きの個室検索が可能です。</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+</body>
+</html>

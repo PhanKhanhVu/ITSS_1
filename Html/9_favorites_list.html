@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Favorites List</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      padding: 40px 0;
+    }
+    
+    /* Profile Sidebar */
+    .profile-sidebar { background: var(--bg-surface); border-radius: var(--border-radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); height: fit-content; }
+    .nav-menu { padding: 16px 0; }
+    .nav-menu a { display: flex; align-items: center; padding: 16px 24px; color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 15px; border-left: 3px solid transparent; }
+    .nav-menu a i { width: 24px; font-size: 18px; color: var(--text-secondary); margin-right: 12px; }
+    .nav-menu a:hover { background: var(--bg-main); }
+    .nav-menu a.active { color: var(--primary); border-left-color: var(--primary); background: rgba(218,41,28,0.03); }
+    .nav-menu a.active i { color: var(--primary); }
+
+    .main-block {
+      padding-bottom: 40px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+    
+    .tab {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+    
+    .tab:hover { color: var(--primary); }
+    
+    .tab.active {
+      color: var(--primary);
+    }
+    
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* Grid for Favorites */
+    .fav-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .fav-card {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    .fav-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+    
+    .fav-card .card-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    
+    .fav-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      border: none;
+      font-size: 14px;
+    }
+    
+    .fav-card .card-body {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--accent-gold);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <nav class="navbar">
+    <div class="container d-flex align-items-center justify-content-between h-100">
+      <div class="d-flex align-items-center gap-3">
+        <a href="1_home.html" class="nav-brand"><i class="fa-solid fa-bowl-rice"></i> JP Food</a>
+      </div>
+      <div class="nav-actions">
+        <a href="6_my_page.html" class="btn btn-secondary font-jp">田中さん</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container animate-fade-in">
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar -->
+      <aside>
+        <div class="profile-sidebar">
+          <div class="nav-menu font-jp">
+            <a href="6_my_page.html"><i class="fa-solid fa-user"></i> プロフィール</a>
+            <a href="#"><i class="fa-regular fa-calendar-check"></i> 予約履歴</a>
+            <a href="9_favorites_list.html" class="active"><i class="fa-solid fa-heart"></i> お気に入り</a>
+            <a href="8_coupon_list.html"><i class="fa-solid fa-ticket"></i> クーポン</a>
+            <a href="7_notification_center.html"><i class="fa-regular fa-bell"></i> お知らせ</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-block">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+          <h2 class="text-h2 font-jp">❤️ お気に入りリスト</h2>
+        </div>
+
+        <div class="tabs font-jp">
+          <div class="tab active">レストラン (5)</div>
+          <div class="tab">料理・メニュー (2)</div>
+        </div>
+
+        <div class="fav-grid">
+          
+          <!-- Fav 1 -->
+          <a href="3_restaurant_detail.html" style="text-decoration:none; color:inherit;">
+            <div class="fav-card">
+              <div style="position:relative;">
+                <img src="https://halotravel.vn/wp-content/uploads/2020/10/pho-bat-dan3-e1603927789230.jpg?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Pho">
+                <button class="fav-btn"><i class="fa-solid fa-heart"></i></button>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h3 class="font-jp" style="font-size: 16px; font-weight:700;">Phở Bát Đàn</h3>
+                  <div class="rating"><i class="fa-solid fa-star"></i> 4.8</div>
+                </div>
+                <p class="text-small font-jp mb-2"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Hoan Kiem, Hanoi</p>
+                <div class="d-flex gap-1 mt-auto">
+                  <span class="badge badge-green" style="background:white; border:1px solid var(--accent-green);">衛生認証</span>
+                  <span class="badge badge-gray">フォー</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Fav 2 -->
+          <a href="3_restaurant_detail.html" style="text-decoration:none; color:inherit;">
+            <div class="fav-card">
+              <div style="position:relative;">
+                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/94/e6/99/caption.jpg?w=900&h=500&s=1" class="card-img" alt="Bun Cha">
+                <button class="fav-btn"><i class="fa-solid fa-heart"></i></button>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h3 class="font-jp" style="font-size: 16px; font-weight:700;">Bun Cha Huong Lien</h3>
+                  <div class="rating"><i class="fa-solid fa-star"></i> 4.6</div>
+                </div>
+                <p class="text-small font-jp mb-2"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Hai Ba Trung, Hanoi</p>
+                <div class="d-flex gap-1 mt-auto">
+                  <span class="badge badge-green" style="background:white; border:1px solid var(--accent-green);">衛生認証</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Fav 3 -->
+          <a href="3_restaurant_detail.html" style="text-decoration:none; color:inherit;">
+            <div class="fav-card">
+              <div style="position:relative;">
+                <img src="https://assets.unileversolutions.com/recipes-v2/246691.jpg" class="card-img" alt="Nem Ran">
+                <button class="fav-btn"><i class="fa-solid fa-heart"></i></button>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h3 class="font-jp" style="font-size: 16px; font-weight:700;">Quan An Ngon</h3>
+                  <div class="rating"><i class="fa-solid fa-star"></i> 4.5</div>
+                </div>
+                <p class="text-small font-jp mb-2"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Ba Dinh, Hanoi</p>
+                <div class="d-flex flex-wrap gap-1 mt-auto">
+                  <span class="badge badge-gray">接待向き</span>
+                  <span class="badge badge-gray">個室あり</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Fav 4 -->
+          <a href="3_restaurant_detail.html" style="text-decoration:none; color:inherit;">
+            <div class="fav-card">
+              <div style="position:relative;">
+                <img src="https://vcdn1-dulich.vnecdn.net/2025/10/21/z7139679302136c1f0d8c2350d7a32-3891-3736-1761024873.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=M-gTCg0TJjuQoUz8RDDOpg" class="card-img" alt="Banh Mi">
+                <button class="fav-btn"><i class="fa-solid fa-heart"></i></button>
+              </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <h3 class="font-jp" style="font-size: 16px; font-weight:700;">Bánh Mì 25</h3>
+                  <div class="rating"><i class="fa-solid fa-star"></i> 4.7</div>
+                </div>
+                <p class="text-small font-jp mb-2"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Hoan Kiem, Hanoi</p>
+                <div class="d-flex flex-wrap gap-1 mt-auto">
+                  <span class="badge badge-green" style="background:white; border:1px solid var(--accent-green);">衛生認証</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+</body>
+</html>

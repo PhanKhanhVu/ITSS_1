@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - My Page</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      padding: 40px 0;
+    }
+
+    /* Sidebar Profile */
+    .profile-sidebar {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .profile-header {
+      padding: 32px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .avatar-wrapper {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 700;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 12px rgba(218, 41, 28, 0.3);
+    }
+
+    .profile-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .stat-item {
+      text-align: center;
+      color: var(--text-main);
+    }
+    .stat-num { font-size: 18px; font-weight: 700; }
+
+    .nav-menu {
+      padding: 16px 0;
+    }
+
+    .nav-menu a {
+      display: flex;
+      align-items: center;
+      padding: 16px 24px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: var(--transition);
+      border-left: 3px solid transparent;
+    }
+
+    .nav-menu a i {
+      width: 24px;
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-right: 12px;
+      transition: var(--transition);
+    }
+
+    .nav-menu a:hover {
+      background: var(--bg-main);
+    }
+
+    .nav-menu a.active {
+      color: var(--primary);
+      border-left-color: var(--primary);
+      background: rgba(218,41,28,0.03);
+    }
+    .nav-menu a.active i { color: var(--primary); }
+
+    /* Main Content */
+    .section-block {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 32px;
+    }
+
+    .booking-card {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      margin-bottom: 16px;
+      transition: var(--transition);
+    }
+    
+    .booking-card:hover { border-color: var(--primary); }
+
+    .booking-date {
+      padding-right: 24px;
+      border-right: 1px solid var(--border-color);
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .booking-info {
+      padding-left: 24px;
+      flex: 1;
+    }
+    
+    .booking-actions {
+      display: flex;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar">
+    <div class="container d-flex align-items-center justify-content-between h-100">
+      <div class="d-flex align-items-center gap-3">
+        <a href="1_home.html" class="nav-brand"><i class="fa-solid fa-bowl-rice"></i> JP Food</a>
+        <div class="nav-links">
+          <a href="1_home.html" class="font-jp">ホーム</a>
+          <a href="2_search_results.html" class="font-jp">検索</a>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="6_my_page.html" class="btn btn-secondary font-jp">田中さん</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container animate-fade-in">
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar -->
+      <aside>
+        <div class="profile-sidebar">
+          <div class="profile-header">
+            <div class="avatar-wrapper">T</div>
+            <h2 class="text-h2 font-jp">Tanaka M.</h2>
+            <p class="text-secondary font-jp text-small mt-1">Hanoi 在住</p>
+            
+            <div class="profile-stats font-jp">
+              <div class="stat-item">
+                <div class="stat-num">12</div>
+                <div class="text-small">レビュー</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-num">5</div>
+                <div class="text-small">保存済み</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="nav-menu font-jp">
+            <a href="6_my_page.html" class="active"><i class="fa-solid fa-user"></i> プロフィール</a>
+            <a href="#"><i class="fa-regular fa-calendar-check"></i> 予約履歴</a>
+            <a href="#"><i class="fa-regular fa-heart"></i> お気に入り</a>
+            <a href="8_coupon_list.html"><i class="fa-solid fa-ticket"></i> クーポン</a>
+            <a href="7_notification_center.html"><i class="fa-regular fa-bell"></i> お知らせ</a>
+            <a href="#"><i class="fa-solid fa-gear"></i> 設定</a>
+            <a href="#" style="color:#e74c3c; border-top:1px solid var(--border-color); margin-top:16px;"><i class="fa-solid fa-arrow-right-from-bracket" style="color:#e74c3c;"></i> ログアウト</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main>
+        
+        <!-- Upcoming Bookings -->
+        <div class="section-block">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-h2 font-jp">🗓 今後の予約</h2>
+            <a href="#" class="text-primary font-jp text-small" style="text-decoration:none;">すべて見る</a>
+          </div>
+
+          <div class="booking-card">
+            <div class="booking-date">
+              <div class="font-jp" style="color:var(--primary); font-weight:700;">3月</div>
+              <div style="font-size:32px; font-weight:700; line-height:1;">16</div>
+              <div class="text-small font-jp mt-1">19:00</div>
+            </div>
+            <div class="booking-info">
+              <span class="badge badge-green" style="margin-bottom:8px;">予約確定</span>
+              <h3 class="text-h2 font-jp">Phở Bát Đàn</h3>
+              <p class="text-secondary font-jp text-small mt-1"><i class="fa-solid fa-user-group" style="margin-right:6px;"></i>4名様 ・ お任せコース</p>
+            </div>
+            <div class="booking-actions">
+              <button class="btn btn-secondary font-jp">詳細を見る</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="section-block">
+          <h2 class="text-h2 font-jp mb-4">✍️ 最近のレビュー</h2>
+          
+          <div style="border-bottom: 1px dashed var(--border-color); padding-bottom:20px; margin-bottom:20px;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h3 class="text-h3 font-jp">Quan An Ngon</h3>
+              <div class="rating" style="background:var(--accent-gold); color:white; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;"><i class="fa-solid fa-star"></i> 4.5</div>
+            </div>
+            <p class="text-body font-jp" style="color:var(--text-secondary); line-height:1.6;">清潔感があり、個室も利用できたので接待で重宝しました。ベトナム料理全般が楽しめます。</p>
+            <div class="text-small text-secondary font-jp mt-2">2026年3月1日 投稿</div>
+          </div>
+          
+          <a href="5_review_submission.html" class="btn btn-secondary btn-block font-jp mt-2" style="padding:16px;">
+            <i class="fa-solid fa-pen" style="margin-right:8px;"></i> 行ったお店のレビューを書く
+          </a>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+</body>
+</html>

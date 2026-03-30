@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Coupon List</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      padding: 40px 0;
+    }
+    
+    /* Reuse sidebar */
+    .profile-sidebar { background: var(--bg-surface); border-radius: var(--border-radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); height: fit-content; }
+    .nav-menu { padding: 16px 0; }
+    .nav-menu a { display: flex; align-items: center; padding: 16px 24px; color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 15px; border-left: 3px solid transparent; }
+    .nav-menu a i { width: 24px; font-size: 18px; color: var(--text-secondary); margin-right: 12px; }
+    .nav-menu a:hover { background: var(--bg-main); }
+    .nav-menu a.active { color: var(--primary); border-left-color: var(--primary); background: rgba(218,41,28,0.03); }
+    .nav-menu a.active i { color: var(--primary); }
+
+    .main-block {
+      padding-bottom: 40px;
+    }
+
+    .coupon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .coupon-card {
+      display: flex;
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .coupon-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 160px; bottom: 0;
+      width: 2px;
+      background-image: linear-gradient(to bottom, #E5E5EA 50%, transparent 50%);
+      background-size: 100% 12px;
+      z-index: 10;
+    }
+
+    .coupon-left {
+      width: 160px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+
+    .coupon-value {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .coupon-right {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .coupon-restaurant {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .coupon-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .coupon-expiry {
+      font-size: 13px;
+      color: var(--primary);
+      background: rgba(218,41,28,0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container d-flex align-items-center justify-content-between h-100">
+      <div class="d-flex align-items-center gap-3">
+        <a href="1_home.html" class="nav-brand"><i class="fa-solid fa-bowl-rice"></i> JP Food</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container animate-fade-in">
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar -->
+      <aside>
+        <div class="profile-sidebar">
+          <div class="nav-menu font-jp">
+            <a href="6_my_page.html"><i class="fa-solid fa-user"></i> プロフィール</a>
+            <a href="#"><i class="fa-regular fa-calendar-check"></i> 予約履歴</a>
+            <a href="8_coupon_list.html" class="active"><i class="fa-solid fa-ticket"></i> クーポン</a>
+            <a href="7_notification_center.html"><i class="fa-regular fa-bell"></i> お知らせ</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-block">
+        <h2 class="text-h2 font-jp mb-4">🎟 マイクーポン</h2>
+
+        <div class="coupon-grid">
+          
+          <!-- Coupon 1 -->
+          <div class="coupon-card">
+            <div class="coupon-left font-jp">
+              <i class="fa-solid fa-beer-mug-empty" style="font-size:32px; margin-bottom:12px; opacity:0.8;"></i>
+              <div class="coupon-value">1杯<br>無料</div>
+              <div style="font-size:12px; opacity:0.8; margin-top:8px;">生ビール</div>
+            </div>
+            <div class="coupon-right font-jp">
+              <div class="coupon-restaurant"><i class="fa-solid fa-shop"></i> Bun Cha Huong Lien</div>
+              <h3 class="coupon-title">日本人駐在員限定ウェルカムドリンク</h3>
+              <div class="coupon-expiry"><i class="fa-regular fa-clock"></i> 有効期限: 2026年4月30日</div>
+              <button class="btn btn-secondary btn-block mt-auto" style="border-color:var(--primary); color:var(--primary); font-size:14px;">クーポンを使う</button>
+            </div>
+          </div>
+
+          <!-- Coupon 2 -->
+          <div class="coupon-card">
+            <div class="coupon-left font-jp">
+              <i class="fa-solid fa-tag" style="font-size:32px; margin-bottom:12px; opacity:0.8;"></i>
+              <div class="coupon-value">10%<br>OFF</div>
+              <div style="font-size:12px; opacity:0.8; margin-top:8px;">お会計から</div>
+            </div>
+            <div class="coupon-right font-jp">
+              <div class="coupon-restaurant"><i class="fa-solid fa-shop"></i> Quan An Ngon</div>
+              <h3 class="coupon-title">ディナータイム限定 10%割引</h3>
+              <div class="coupon-expiry"><i class="fa-regular fa-clock"></i> 有効期限: 2026年3月31日</div>
+              <button class="btn btn-secondary btn-block mt-auto" style="border-color:var(--primary); color:var(--primary); font-size:14px;">クーポンを使う</button>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+</body>
+</html>

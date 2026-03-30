@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - System Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background: #f0f2f5; }
+    
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+    
+    /* System Admin Sidebar - distinct purple/black theme */
+    .sys-sidebar { background: #2f2544; color: white; padding: 24px 0; }
+    .sys-brand { padding: 0 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px; display: flex; align-items:center; gap:8px; font-size:20px; font-weight:700;}
+    
+    .sys-nav a { display: flex; align-items: center; padding: 14px 24px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; border-left: 3px solid transparent; }
+    .sys-nav a i { width: 24px; font-size: 16px; margin-right: 12px; }
+    .sys-nav a:hover, .sys-nav a.active { background: rgba(255,255,255,0.08); color: white; }
+    .sys-nav a.active { border-left-color: #9b59b6; }
+
+    .sys-content { padding: 32px; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+    /* Top Stats */
+    .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+    .stat-box { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid #e1e4e8;}
+    .stat-box .title { font-size: 13px; color: #6c757d; margin-bottom: 8px; font-weight: 600; text-transform: uppercase;}
+    .stat-box .value { font-size: 28px; font-weight: 700; color: #343a40; }
+
+    /* Tables Area */
+    .panel { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e1e4e8; margin-bottom: 24px; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom:16px; border-bottom: 1px solid #e1e4e8;}
+    .panel-title { font-size: 16px; font-weight: 700; color: #343a40; display:flex; align-items:center; gap:8px;}
+
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .admin-table th { text-align: left; padding: 12px 16px; background: #f8f9fa; color: #495057; font-weight: 600; border-bottom: 2px solid #dee2e6; }
+    .admin-table td { padding: 16px; border-bottom: 1px solid #e9ecef; vertical-align: middle; color:#495057;}
+    .admin-table tr:hover { background: #f8f9fa; }
+
+    .btn-sm { padding: 4px 10px; font-size: 12px; border-radius: 4px; border: 1px solid transparent; cursor:pointer; font-weight:600;}
+    .btn-approve { background: #e8f5e9; color: #2e7d32; border-color: #c8e6c9; }
+    .btn-reject { background: #ffebee; color: #c62828; border-color: #ffcdd2; }
+    .btn-view { background: #e3f2fd; color: #1565c0; border-color: #bbdefb; }
+
+    /* =========================================
+       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (SPEC ANNOTATIONS)
+       ========================================= */
+    body {
+      overflow-x: hidden;
+      padding-top: 16px;
+      padding-bottom: 24px;
+    }
+    
+    .spec-box {
+      position: relative;
+    }
+    
+    .spec-box::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border: 2px solid #D32F2F;
+      border-radius: 8px;
+      pointer-events: none; 
+      z-index: 100;
+    }
+    
+    .spec-box::before {
+      content: attr(data-spec-no);
+      position: absolute;
+      top: -16px;
+      left: -16px; 
+      width: 28px;
+      height: 28px;
+      background-color: #D32F2F;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      z-index: 101;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .spec-box.tight {
+      width: max-content; 
+      display: inline-block; 
+    }
+
+    .spec-box.tight::after {
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-width: 2px;
+      border-style: dashed;
+    }
+    .spec-box.tight::before {
+      top: -10px;
+      left: -10px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+    /* ========================================= */
+
+  </style>
+</head>
+<body>
+
+  <div class="admin-layout animate-fade-in font-jp">
+    
+    <aside class="sys-sidebar">
+      <div class="sys-brand spec-box tight" data-spec-no="1" style="margin: 0 16px 16px; padding: 8px;">
+        <i class="fa-solid fa-server" style="color:#9b59b6;"></i> JP Food Admin
+      </div>
+      
+      <div class="sys-nav spec-box" data-spec-no="2" style="margin: 0 12px; padding-bottom: 12px; display: block;">
+        <div style="padding: 16px 24px 8px; font-size:11px; color:#adb5bd; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Main</div>
+        <a href="16_system_admin.html" class="active"><i class="fa-solid fa-gauge"></i> ダッシュボード (Dashboard)</a>
+        <a href="#"><i class="fa-solid fa-shop"></i> 店舗承認管理 (Duyệt Cửa hàng)</a>
+        <a href="#"><i class="fa-solid fa-users"></i> ユーザー管理 (Người dùng)</a>
+        
+        <div style="padding: 24px 24px 8px; font-size:11px; color:#adb5bd; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Moderation</div>
+        <a href="#"><i class="fa-solid fa-flag"></i> レビュー通報 (Báo cáo Đánh giá)</a>
+        <a href="#"><i class="fa-solid fa-life-ring"></i> サポートチケット (Support)</a>
+        
+        <div style="padding: 24px 24px 8px; font-size:11px; color:#adb5bd; text-transform:uppercase; letter-spacing:1px; font-weight:700;">System</div>
+        <a href="#"><i class="fa-solid fa-language"></i> 翻訳AI設定 (AI Translation DB)</a>
+        <a href="#"><i class="fa-solid fa-cogs"></i> システム設定 (Settings)</a>
+      </div>
+    </aside>
+
+    <main class="sys-content">
+      
+      <div class="d-flex justify-content-between align-items-center mb-4 spec-box tight" data-spec-no="3" style="padding: 8px; width: calc(100% - 16px);">
+        <h1 style="font-size:24px; font-weight:700; color:#343a40; margin:0;">System Overview</h1>
+        <div class="d-flex align-items-center gap-3">
+          <span style="font-size:14px; color:#6c757d;"><i class="fa-solid fa-circle" style="color:#28a745; font-size:10px; margin-right:4px;"></i> System Status: All Good</span>
+          <button style="background:white; border:1px solid #dee2e6; border-radius:50%; width:36px; height:36px; cursor:pointer;"><i class="fa-solid fa-user-astronaut"></i></button>
+        </div>
+      </div>
+
+      <div class="stat-row spec-box" data-spec-no="4" style="padding: 4px; margin-bottom: 32px;">
+        <div class="stat-box" style="margin-bottom: 0;">
+          <div class="title">Active Restaurants</div>
+          <div class="value">4,289</div>
+        </div>
+        <div class="stat-box" style="margin-bottom: 0;">
+          <div class="title">Total Users (JP)</div>
+          <div class="value">12,450</div>
+        </div>
+        <div class="stat-box" style="margin-bottom: 0;">
+          <div class="title">Pending Approvals</div>
+          <div class="value" style="color:#e67e22;">14</div>
+        </div>
+        <div class="stat-box" style="margin-bottom: 0;">
+          <div class="title">Reported Reviews</div>
+          <div class="value" style="color:#e74c3c;">3</div>
+        </div>
+      </div>
+
+      <div class="panel spec-box" data-spec-no="5" style="margin-bottom: 32px;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-store" style="color:#f39c12;"></i> 新規店舗の承認待ち (Pending Restaurant Approvals)</div>
+          <a href="#" style="font-size:13px; color:#1565c0; text-decoration:none;">View All</a>
+        </div>
+        
+        <div style="padding: 4px;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>店舗名 (Store)</th>
+                <th>申請者 (Owner)</th>
+                <th>申請日 (Date)</th>
+                <th>ステータス</th>
+                <th>アクション</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#REQ-8021</td>
+                <td style="font-weight:600;">Bún Chả Đắc Kim</td>
+                <td>Nguyen Van D.</td>
+                <td>2026-03-30</td>
+                <td><span class="badge" style="background:#fff3cd; color:#856404; font-size:11px; padding: 4px 8px; border-radius: 4px;">Pending</span></td>
+                
+                <td>
+                  <div class="spec-box tight" data-spec-no="6" style="display:inline-flex; gap:6px; padding: 4px;">
+                    <button class="btn-sm btn-view">Review Info</button>
+                    <button class="btn-sm btn-approve"><i class="fa-solid fa-check"></i></button>
+                    <button class="btn-sm btn-reject"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>#REQ-8020</td>
+                <td style="font-weight:600;">Pizza 4P's Hoan Kiem</td>
+                <td>Tanaka Y.</td>
+                <td>2026-03-29</td>
+                <td><span class="badge" style="background:#fff3cd; color:#856404; font-size:11px; padding: 4px 8px; border-radius: 4px;">Pending</span></td>
+                <td>
+                  <div style="display:inline-flex; gap:6px; padding: 4px;">
+                    <button class="btn-sm btn-view">Review Info</button>
+                    <button class="btn-sm btn-approve"><i class="fa-solid fa-check"></i></button>
+                    <button class="btn-sm btn-reject"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel spec-box" data-spec-no="7">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-flag" style="color:#e74c3c;"></i> 報告されたレビュー (Reported Reviews)</div>
+        </div>
+        
+        <div style="padding: 4px;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Review ID</th>
+                <th>対象店舗 (Store)</th>
+                <th>通報理由 (Reason)</th>
+                <th>アクション</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#REV-992</td>
+                <td>Mâm Bạc Restaurant</td>
+                <td style="color:#c62828; font-weight:500;">Inappropriate Content (不適切な内容)</td>
+                
+                <td>
+                  <div class="spec-box tight" data-spec-no="8" style="display:inline-flex; gap:6px; padding: 4px;">
+                    <button class="btn-sm btn-view">Read Review</button>
+                    <button class="btn-sm btn-reject">Delete Review</button>
+                    <button class="btn-sm" style="background:#e0e0e0; color:#424242;">Ignore</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

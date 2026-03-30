@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Reservation Management</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background: #F8F9FA; }
+    
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 70px);
+    }
+    
+    /* Store Sidebar */
+    .store-sidebar { background: #1C2331; color: white; padding: 32px 0; }
+    .store-brand { padding: 0 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
+    .store-nav { padding: 0 12px; }
+    .store-nav a { display: flex; align-items: center; padding: 16px 24px; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; font-size: 15px; border-left: 4px solid transparent; transition: var(--transition); border-radius: 4px; }
+    .store-nav a i { width: 24px; font-size: 18px; margin-right: 12px; }
+    .store-nav a:hover, .store-nav a.active { background: rgba(255,255,255,0.05); color: white; }
+    .store-nav a.active { border-left-color: var(--primary); }
+
+    .dashboard-content { padding: 40px; }
+    
+    /* GOM GỌN NỘI DUNG VÀO GIỮA TRÊN MÀN HÌNH TO */
+    .dashboard-content-inner {
+      max-width: 1200px; /* Giới hạn chiều rộng tối đa là 1200px */
+      margin: 0 auto;    /* Căn giữa vùng nội dung */
+    }
+
+    .panel {
+      background: white;
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Date Filter Controls */
+    .date-filter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 12px 24px;
+      margin-bottom: 24px;
+    }
+
+    .date-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .date-btn:hover { color: var(--primary); }
+
+    /* Reservation Table */
+    .res-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed; /* Ép bảng tuân thủ độ rộng các cột đã chia */
+    }
+
+    /* CHIA TỶ LỆ CHIỀU RỘNG CÁC CỘT CHO CÂN ĐỐI */
+    .res-table th:nth-child(1) { width: 10%; } /* Thời gian */
+    .res-table th:nth-child(2) { width: 22%; } /* Tên khách */
+    .res-table th:nth-child(3) { width: 10%; } /* Số lượng */
+    .res-table th:nth-child(4) { width: 23%; } /* Liên hệ */
+    .res-table th:nth-child(5) { width: 18%; } /* Trạng thái */
+    .res-table th:nth-child(6) { width: 17%; } /* Action */
+
+    .res-table th {
+      text-align: left;
+      padding: 16px;
+      border-bottom: 2px solid var(--border-color);
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .res-table td {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+      word-wrap: break-word; /* Tránh text quá dài làm vỡ layout */
+    }
+
+    .res-table tr:hover {
+      background: rgba(218, 41, 28, 0.02);
+    }
+    
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-block;
+    }
+    
+    .status-pending { background: #FFF3CD; color: #856404; border: 1px solid #FFEEBA; }
+    .status-confirmed { background: #D4EDDA; color: #155724; border: 1px solid #C3E6CB; }
+    .status-cancelled { background: #F8D7DA; color: #721C24; border: 1px solid #F5C6CB; }
+
+    /* =========================================
+       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (SPEC ANNOTATIONS)
+       ========================================= */
+    body {
+      overflow-x: hidden;
+      padding-top: 16px;
+      padding-bottom: 24px;
+    }
+    
+    .spec-box {
+      position: relative;
+    }
+    
+    .spec-box::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border: 2px solid #D32F2F;
+      border-radius: 8px;
+      pointer-events: none; 
+      z-index: 100;
+    }
+    
+    .spec-box::before {
+      content: attr(data-spec-no);
+      position: absolute;
+      top: -16px;
+      left: -16px; 
+      width: 28px;
+      height: 28px;
+      background-color: #D32F2F;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      z-index: 101;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .spec-box.tight {
+      width: max-content; 
+      display: inline-block; 
+    }
+
+    .spec-box.tight::after {
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-width: 2px;
+      border-style: dashed;
+    }
+    .spec-box.tight::before {
+      top: -10px;
+      left: -10px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+    /* ========================================= */
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" style="box-shadow:none; border-bottom:1px solid #ddd; background: white; padding: 12px 0;">
+    <div class="container d-flex align-items-center justify-content-between h-100 spec-box" data-spec-no="1" style="padding: 4px 40px; max-width:100%;">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-shop" style="color:var(--primary); font-size:20px;"></i>
+        <span class="font-jp" style="font-weight:700; font-size:18px;">店舗管理システム - Phở Bát Đàn</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout animate-fade-in">
+    <aside class="store-sidebar font-jp">
+      <div class="store-brand"><div class="text-small" style="color:rgba(255,255,255,0.5);">管理メニュー</div></div>
+      <div class="store-nav spec-box" data-spec-no="2" style="margin: 0 12px; padding: 8px 0; display: block;">
+        <a href="11_store_dashboard.html"><i class="fa-solid fa-chart-pie"></i> ダッシュボード</a>
+        <a href="12_store_menu_edit.html"><i class="fa-solid fa-pen-to-square"></i> 店舗・メニュー編集</a>
+        <a href="13_reservation_management.html" class="active"><i class="fa-solid fa-calendar-check"></i> 予約管理 (Đặt bàn)</a>
+        <a href="14_analytics_report.html"><i class="fa-solid fa-chart-line"></i> 分析レポート</a>
+        <a href="15_support_contact.html"><i class="fa-solid fa-headset"></i> サポート・問い合わせ</a>
+      </div>
+    </aside>
+
+    <main class="dashboard-content font-jp">
+      
+      <div class="dashboard-content-inner">
+      
+        <div class="d-flex justify-content-between align-items-end mb-4">
+          <div style="padding: 4px;">
+            <h1 class="text-h1 text-main spec-box tight" data-spec-no="3" style="margin:0;">予約管理</h1>
+          </div>
+
+          <div class="d-flex gap-2 spec-box tight" data-spec-no="4" style="padding: 4px;">
+            <button class="btn btn-secondary" style="border:1px solid var(--border-color); background:white;"><i class="fa-solid fa-filter"></i> 絞り込み</button>
+            <button class="btn btn-primary" style="background:var(--primary); color:white; border:none;"><i class="fa-solid fa-plus"></i> 新規予約追加</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="date-filter spec-box" data-spec-no="5" style="margin-bottom: 24px; display: flex;">
+            <button class="date-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            <h3 class="text-h3" style="margin:0;"><i class="fa-regular fa-calendar" style="margin-right:8px;"></i> 2026年 3月16日 (火)</h3>
+            <button class="date-btn"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+
+          <div class="spec-box" data-spec-no="6" style="padding: 4px; display: block;">
+            <table class="res-table">
+              <thead>
+                <tr>
+                  <th>時間</th>
+                  <th>お客様名</th>
+                  <th>人数</th>
+                  <th>連絡先</th>
+                  <th>ステータス</th>
+                  <th>アクション</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:700; font-size:16px;">18:00</td>
+                  <td>Yamada T. <br><span class="badge badge-gold" style="font-size:10px; margin-top:4px; padding:2px 6px; background:white; border:1px solid var(--accent-gold);">新規顧客</span></td>
+                  <td>2名</td>
+                  <td class="text-secondary">090-XXXX-XXXX<br><span style="font-size:12px;">yamada@example.com</span></td>
+                  <td><span class="status-badge status-pending spec-box tight" data-spec-no="7">承認待ち (Chờ duyệt)</span></td>
+                  <td>
+                    <div class="d-flex gap-2 spec-box tight" data-spec-no="8" style="padding: 4px;">
+                      <button class="btn btn-primary" style="padding:6px 12px; font-size:13px; background:var(--primary); color:white; border:none;">承認</button>
+                      <button class="btn btn-secondary" style="padding:6px 12px; font-size:13px; color:#e74c3c; background:white; border:1px solid var(--border-color);">拒否</button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="font-weight:700; font-size:16px;">19:00</td>
+                  <td>Tanaka M.</td>
+                  <td>4名</td>
+                  <td class="text-secondary">090-YYYY-YYYY</td>
+                  <td><span class="status-badge status-confirmed spec-box tight" data-spec-no="9">予約確定 (Đã duyệt)</span></td>
+                  <td>
+                    <button class="btn btn-secondary" style="padding:6px 12px; font-size:13px; background:white; border:1px solid var(--border-color);">詳細</button>
+                  </td>
+                </tr>
+                
+                <tr>
+                  <td style="font-weight:700; font-size:16px;">19:30</td>
+                  <td>Suzuki K. <br><span class="badge badge-green" style="background:var(--accent-green); color:white; font-size:10px; margin-top:4px; padding:2px 6px;">リピーター</span></td>
+                  <td>2名</td>
+                  <td class="text-secondary">090-ZZZZ-ZZZZ<br><span style="font-size:12px; color:var(--primary);">リクエスト: 窓側の席希望</span></td>
+                  <td><span class="status-badge status-confirmed">予約確定 (Đã duyệt)</span></td>
+                  <td>
+                    <button class="btn btn-secondary" style="padding:6px 12px; font-size:13px; background:white; border:1px solid var(--border-color);">詳細</button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="font-weight:700; font-size:16px; color:var(--text-secondary); text-decoration:line-through;">20:00</td>
+                  <td style="color:var(--text-secondary);">Sato H.</td>
+                  <td style="color:var(--text-secondary);">3名</td>
+                  <td class="text-secondary">-</td>
+                  <td><span class="status-badge status-cancelled spec-box tight" data-spec-no="10">キャンセル (Đã hủy)</span></td>
+                  <td>
+                    <button class="btn btn-secondary" style="padding:6px 12px; font-size:13px; opacity:0.5; background:white; border:1px solid var(--border-color);">詳細</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div> </main>
+  </div>
+
+</body>
+</html>

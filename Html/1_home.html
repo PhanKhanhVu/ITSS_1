@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Home (Desktop)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Home Desktop Styles */
+    .hero-section {
+      padding: 40px 0 60px;
+      background: linear-gradient(135deg, var(--bg-surface) 0%, #fff0f0 100%);
+    }
+    
+    .hero-container {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+    }
+    
+    .hero-content {
+      flex: 1;
+    }
+    
+    .hero-title {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+    
+    .hero-title span { color: var(--primary); }
+    
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 500px;
+    }
+    
+    .hero-search-box {
+      background: var(--bg-surface);
+      padding: 12px;
+      border-radius: var(--border-radius-full);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    .hero-search-box input {
+      flex: 1;
+      border: none;
+      padding: 12px 16px;
+      font-size: 16px;
+      outline: none;
+      font-family: inherit;
+    }
+    
+    .hero-search-box .btn {
+      padding: 12px 32px;
+    }
+    
+    .hero-image {
+      flex: 1;
+      position: relative;
+    }
+    
+    .hero-image img {
+      width: 100%;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-lg);
+      height: 400px;
+      object-fit: cover;
+    }
+    
+    /* Category Section */
+    .category-section {
+      padding: 60px 0;
+    }
+    
+    .category-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 32px;
+    }
+    
+    .category-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      width: 120px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    
+    .category-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    
+    .category-item:hover .category-icon {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-md);
+      background: var(--primary);
+      color: white;
+    }
+    
+    .category-item span {
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    /* Restaurant Cards Layout */
+    .recommend-section {
+      padding: 60px 0;
+      background: var(--bg-surface);
+    }
+
+    .restaurant-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+      position: relative; /* Thêm relative cho spec-box */
+    }
+
+    .restaurant-card .card-img {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .restaurant-card .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--accent-gold);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* =========================================
+       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (SPEC ANNOTATIONS)
+       ========================================= */
+    body {
+      overflow-x: hidden;
+      padding-top: 24px; /* Chừa khoảng trống cho header */
+      padding-bottom: 24px;
+    }
+    
+    .spec-box {
+      position: relative;
+      display: block;
+    }
+    
+    /* Box đỏ bao quanh */
+    .spec-box::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border: 2px solid #D32F2F;
+      border-radius: 8px;
+      pointer-events: none; 
+      z-index: 100;
+    }
+    
+    /* Số thứ tự dạng Badge tròn */
+    .spec-box::before {
+      content: attr(data-spec-no);
+      position: absolute;
+      top: -16px;
+      left: -16px; 
+      width: 28px;
+      height: 28px;
+      background-color: #D32F2F;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      z-index: 101;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Style riêng cho các nút bấm (button/link/search) */
+    .spec-box.tight::after {
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-width: 2px;
+      border-style: dashed;
+    }
+    .spec-box.tight::before {
+      top: -10px;
+      left: -10px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+    /* ========================================= */
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" style="padding: 12px 0; border-bottom: 1px solid var(--border-color);">
+    <div class="container d-flex align-items-center justify-content-between h-100">
+      
+      <div class="d-flex align-items-center gap-3 spec-box" data-spec-no="1" style="padding: 4px;">
+        <a href="1_home.html" class="nav-brand">
+          <i class="fa-solid fa-bowl-rice"></i> JP Food
+        </a>
+        <div class="nav-links d-flex gap-3">
+          <a href="1_home.html" class="active font-jp" style="color:var(--primary); font-weight:bold;">ホーム</a>
+          <a href="2_search_results.html" class="font-jp">検索</a>
+          <a href="#" class="font-jp">ランキング</a>
+          <a href="#" class="font-jp">コラム</a>
+        </div>
+      </div>
+      
+      <div class="nav-search spec-box tight" data-spec-no="2" style="background:var(--bg-surface); padding:8px 16px; border-radius:20px; border:1px solid var(--border-color); display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--text-secondary);"></i>
+        <input type="text" class="font-jp" placeholder="エリア、料理名で検索..." style="border:none; outline:none; background:transparent;">
+      </div>
+
+      <div class="nav-actions d-flex align-items-center gap-3 spec-box" data-spec-no="3" style="padding: 4px;">
+        <button class="icon-btn" style="border:none; background:none; font-size:20px;"><i class="fa-regular fa-heart"></i></button>
+        <button class="icon-btn" style="position: relative; border:none; background:none; font-size:20px;">
+          <i class="fa-regular fa-bell"></i>
+          <span style="position: absolute; top: 0px; right: 0px; width: 8px; height: 8px; background: var(--primary); border-radius: 50%;"></span>
+        </button>
+        <a href="#" class="btn btn-secondary font-jp" style="padding: 8px 16px; border:1px solid var(--border-color); border-radius:4px; text-decoration:none; color:inherit;">ログイン</a>
+      </div>
+      
+    </div>
+  </nav>
+
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-content animate-fade-in">
+        
+        <div class="spec-box mb-4" data-spec-no="4" style="padding: 8px;">
+          <h1 class="hero-title font-jp" style="margin-bottom:16px;">ハノイで最高の<br><span>ベトナム料理</span>を見つけよう</h1>
+          <p class="hero-subtitle font-jp" style="margin-bottom:0;">日本人の口に合う、清潔で美味しいレストランだけを厳選しました。接待や出張でも安心です。</p>
+        </div>
+        
+        <div class="hero-search-box spec-box tight" data-spec-no="5" style="margin-bottom: 24px;">
+          <i class="fa-solid fa-location-dot" style="color:var(--text-secondary); margin-left:8px; font-size:20px;"></i>
+          <input type="text" class="font-jp" placeholder="ハノイ, フォー, 接待...">
+          <a href="2_search_results.html" class="btn btn-primary font-jp" style="text-decoration:none; border-radius:var(--border-radius-full); display:flex; align-items:center;">検索する</a>
+        </div>
+        
+        <div class="d-flex align-items-center gap-2 mt-3 text-small font-jp spec-box" data-spec-no="6" style="padding: 8px; display:inline-flex;">
+          <span>人気の検索キーワード:</span>
+          <span class="badge badge-gray" style="background:white; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px;">フォー</span>
+          <span class="badge badge-gray" style="background:white; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px;">ホーアンキエム周辺</span>
+          <span class="badge badge-gray" style="background:white; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px;">接待向き</span>
+        </div>
+        
+      </div>
+      
+      <div class="hero-image animate-fade-in spec-box" data-spec-no="7" style="animation-delay: 0.2s; padding: 4px;">
+        <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Vietnamese Food">
+        <div class="card" style="position: absolute; bottom: -20px; left: -20px; padding: 16px; display: flex; align-items: center; gap: 12px; background:white; border-radius:8px; box-shadow:var(--shadow-lg);">
+          <div class="rating"><i class="fa-solid fa-star"></i> 4.8</div>
+          <div class="font-jp">
+            <h4 style="font-size:15px; margin:0;">安心の口コミ</h4>
+            <span class="text-small" style="color:var(--text-secondary);">日本人ユーザー500+人</span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <section class="category-section container">
+    <div class="d-flex justify-content-between align-items-end mb-4 animate-fade-in">
+      <div>
+        <h2 class="text-h2 font-jp" style="margin:0;">料理カテゴリー</h2>
+        <p class="text-secondary font-jp mt-1" style="margin:0;">気分に合わせて選びましょう</p>
+      </div>
+    </div>
+    
+    <div class="category-grid animate-fade-in spec-box" data-spec-no="8" style="animation-delay: 0.1s; padding: 16px;">
+      <a href="2_search_results.html" class="category-item">
+        <div class="category-icon"><i class="fa-solid fa-bowl-food"></i></div>
+        <span class="font-jp">フォー (Phở)</span>
+      </a>
+      <a href="2_search_results.html" class="category-item">
+        <div class="category-icon"><i class="fa-solid fa-fire-burner"></i></div>
+        <span class="font-jp">ブンチャー</span>
+      </a>
+      <a href="2_search_results.html" class="category-item">
+        <div class="category-icon"><i class="fa-solid fa-leaf"></i></div>
+        <span class="font-jp">生春巻き</span>
+      </a>
+      <a href="2_search_results.html" class="category-item">
+        <div class="category-icon"><i class="fa-solid fa-utensils"></i></div>
+        <span class="font-jp">ベトナム定食</span>
+      </a>
+      <a href="2_search_results.html" class="category-item">
+        <div class="category-icon"><i class="fa-solid fa-fish-fins"></i></div>
+        <span class="font-jp">海鮮料理</span>
+      </a>
+      <a href="2_search_results.html" class="category-item">
+        <div class="category-icon" style="background:#f0f0f0; color:var(--text-main);"><i class="fa-solid fa-ellipsis"></i></div>
+        <span class="font-jp">すべて見る</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="recommend-section">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-end mb-4 animate-fade-in">
+        <div>
+          <h2 class="text-h2 font-jp" style="margin:0;">日本人駐在員のおすすめ</h2>
+          <p class="text-secondary font-jp mt-1" style="margin:0;">衛生面や日本語対応で評価の高いレストラン</p>
+        </div>
+        
+        <div style="padding: 4px;">
+          <a href="2_search_results.html" class="btn btn-secondary font-jp spec-box tight" data-spec-no="9" style="padding: 8px 16px; border-radius:4px; text-decoration:none; color:inherit; border:1px solid var(--border-color); display:inline-block;">もっと見る</a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-4 animate-fade-in" style="animation-delay: 0.2s; display:grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+        
+        <a href="3_restaurant_detail.html" class="card restaurant-card spec-box" data-spec-no="10" style="background:white; border-radius:8px; overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+          <div style="position:relative;">
+            <img src="https://halotravel.vn/wp-content/uploads/2020/10/pho-bat-dan3-e1603927789230.jpg?auto=format&fit=crop&w=600&q=80" class="card-img" alt="Pho">
+            <span class="badge badge-gold" style="position:absolute; top:12px; left:12px; background:white; border:1px solid var(--accent-gold); padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">人気</span>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h3 class="text-h3 font-jp" style="margin:0; font-size:18px;">Phở Bát Đàn</h3>
+              <div class="rating"><i class="fa-solid fa-star"></i> 4.8</div>
+            </div>
+            <p class="text-small mb-2" style="color:var(--text-secondary); font-size:13px;"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Hoan Kiem, Hanoi</p>
+            <div class="mt-auto d-flex gap-2">
+              <span class="badge badge-green" style="font-size:11px; padding:2px 6px; border:1px solid var(--accent-green); border-radius:4px;"><i class="fa-solid fa-check-circle" style="margin-right:2px;"></i>衛生認証</span>
+              <span class="badge badge-gray" style="font-size:11px; padding:2px 6px; background:#f0f0f0; border-radius:4px;">日本語メニューあり</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="3_restaurant_detail.html" class="card restaurant-card" style="background:white; border-radius:8px; overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+          <div style="position:relative;">
+            <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/94/e6/99/caption.jpg?w=900&h=500&s=1" class="card-img" alt="Bun Cha">
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h3 class="text-h3 font-jp" style="margin:0; font-size:18px;">Bun Cha Huong Lien</h3>
+              <div class="rating"><i class="fa-solid fa-star"></i> 4.6</div>
+            </div>
+            <p class="text-small mb-2" style="color:var(--text-secondary); font-size:13px;"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Hai Ba Trung, Hanoi</p>
+            <div class="mt-auto d-flex gap-2">
+              <span class="badge badge-green" style="font-size:11px; padding:2px 6px; border:1px solid var(--accent-green); border-radius:4px;"><i class="fa-solid fa-check-circle" style="margin-right:2px;"></i>衛生認証</span>
+              <span class="badge badge-gray" style="font-size:11px; padding:2px 6px; background:#f0f0f0; border-radius:4px;">英語OK</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="3_restaurant_detail.html" class="card restaurant-card" style="background:white; border-radius:8px; overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+          <div style="position:relative;">
+            <img src="https://assets.unileversolutions.com/recipes-v2/246691.jpg" class="card-img" alt="Nem Ran">
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h3 class="text-h3 font-jp" style="margin:0; font-size:18px;">Quan An Ngon</h3>
+              <div class="rating"><i class="fa-solid fa-star"></i> 4.5</div>
+            </div>
+            <p class="text-small mb-2" style="color:var(--text-secondary); font-size:13px;"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Ba Dinh, Hanoi</p>
+            <div class="mt-auto d-flex flex-wrap gap-2">
+              <span class="badge badge-gray" style="font-size:11px; padding:2px 6px; background:#f0f0f0; border-radius:4px;">接待向き</span>
+              <span class="badge badge-gray" style="font-size:11px; padding:2px 6px; background:#f0f0f0; border-radius:4px;">個室あり</span>
+              <span class="badge badge-gray" style="font-size:11px; padding:2px 6px; background:#f0f0f0; border-radius:4px;">日本語OK</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="3_restaurant_detail.html" class="card restaurant-card" style="background:white; border-radius:8px; overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border-color);">
+          <div style="position:relative;">
+            <img src="https://vcdn1-dulich.vnecdn.net/2025/10/21/z7139679302136c1f0d8c2350d7a32-3891-3736-1761024873.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=M-gTCg0TJjuQoUz8RDDOpg" class="card-img" alt="Banh Mi">
+            <span class="badge badge-green" style="position:absolute; top:12px; left:12px; background:white; border:1px solid var(--accent-green); padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">New</span>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h3 class="text-h3 font-jp" style="margin:0; font-size:18px;">Bánh Mì 25</h3>
+              <div class="rating"><i class="fa-solid fa-star"></i> 4.7</div>
+            </div>
+            <p class="text-small mb-2" style="color:var(--text-secondary); font-size:13px;"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Hoan Kiem, Hanoi</p>
+            <div class="mt-auto d-flex gap-2">
+              <span class="badge badge-green" style="font-size:11px; padding:2px 6px; border:1px solid var(--accent-green); border-radius:4px;"><i class="fa-solid fa-check-circle" style="margin-right:2px;"></i>衛生認証</span>
+              <span class="badge badge-gray" style="font-size:11px; padding:2px 6px; background:#f0f0f0; border-radius:4px;">テイクアウト</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="padding: 24px 0; border-top: 1px solid var(--border-color); margin-top: 40px;">
+    <div class="container d-flex justify-content-between align-items-center spec-box" data-spec-no="11" style="padding: 12px;">
+      <div class="font-jp text-secondary">
+        &copy; 2026 JP Food. All rights reserved.
+      </div>
+      <div class="nav-links d-flex gap-4">
+        <a href="#" class="font-jp" style="text-decoration:none; color:inherit;">利用規約</a>
+        <a href="#" class="font-jp" style="text-decoration:none; color:inherit;">プライバシーポリシー</a>
+        <a href="#" class="font-jp" style="text-decoration:none; color:inherit;">お問い合わせ</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Write Review</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .review-layout {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 40px;
+      padding: 40px 0 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .restaurant-summary {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 100px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .restaurant-summary img {
+      width: 100%;
+      height: 200px;
+      border-radius: var(--border-radius-md);
+      object-fit: cover;
+      margin-bottom: 24px;
+    }
+
+    .form-container {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Star Rating */
+    .star-rating {
+      display: flex;
+      gap: 8px;
+      font-size: 32px;
+      color: #E5E5EA;
+      cursor: pointer;
+      margin-bottom: 32px;
+    }
+    
+    .star-rating .active { color: var(--accent-gold); }
+    .star-rating i:hover { color: #f2d174; }
+
+    /* Tags */
+    .tag-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    
+    .tag-btn {
+      padding: 10px 20px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-full);
+      background: var(--bg-surface);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .tag-btn:hover { border-color: var(--primary); }
+    .tag-btn.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(218, 41, 28, 0.2);
+    }
+
+    /* Textarea */
+    .review-text {
+      width: 100%;
+      height: 200px;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      font-family: inherit;
+      font-size: 15px;
+      resize: vertical;
+      margin-bottom: 32px;
+      transition: var(--transition);
+      outline: none;
+    }
+    
+    .review-text:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.1);
+    }
+
+    /* Photo Upload */
+    .upload-area {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 40px;
+      text-align: center;
+      background: var(--bg-main);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 32px;
+    }
+    
+    .upload-area:hover {
+      border-color: var(--primary);
+      background: rgba(218, 41, 28, 0.02);
+    }
+    
+    .upload-icon {
+      font-size: 40px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    /* =========================================
+       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (SPEC ANNOTATIONS)
+       ========================================= */
+    body {
+      overflow-x: hidden;
+      padding-top: 16px;
+      padding-bottom: 24px;
+    }
+    
+    .spec-box {
+      position: relative;
+    }
+    
+    .spec-box::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border: 2px solid #D32F2F;
+      border-radius: 8px;
+      pointer-events: none; 
+      z-index: 100;
+    }
+    
+    .spec-box::before {
+      content: attr(data-spec-no);
+      position: absolute;
+      top: -16px;
+      left: -16px; 
+      width: 28px;
+      height: 28px;
+      background-color: #D32F2F;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      z-index: 101;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .spec-box.tight {
+      width: max-content; 
+      display: inline-block; 
+    }
+
+    .spec-box.tight::after {
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-width: 2px;
+      border-style: dashed;
+    }
+    .spec-box.tight::before {
+      top: -10px;
+      left: -10px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+    /* ========================================= */
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" style="border-bottom: 1px solid var(--border-color); box-shadow:none; padding: 12px 0;">
+    <div class="container d-flex align-items-center justify-content-between h-100 spec-box" data-spec-no="1" style="padding: 4px;">
+      <div class="d-flex align-items-center gap-3">
+        <a href="1_home.html" class="nav-brand"><i class="fa-solid fa-bowl-rice"></i> JP Food</a>
+      </div>
+      <div class="font-jp" style="font-size:18px; font-weight:600;">レビューを投稿する</div>
+      <div style="width:120px;"></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="review-layout animate-fade-in">
+      
+      <aside>
+        <div class="restaurant-summary spec-box" data-spec-no="2">
+          <img src="https://halotravel.vn/wp-content/uploads/2020/10/pho-bat-dan3-e1603927789230.jpg?auto=format&fit=crop&w=600&q=80" alt="Restaurant">
+          <h2 class="text-h2 font-jp mb-1">Phở Bát Đàn</h2>
+          <p class="text-secondary font-jp mb-3"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i> 49 Bát Đàn, Hoan Kiem</p>
+          <div class="d-flex align-items-center gap-2 font-jp text-small" style="padding-top:16px; border-top:1px solid var(--border-color);">
+            <i class="fa-solid fa-calendar-check text-primary"></i> 2026年3月10日に来店しました
+          </div>
+        </div>
+      </aside>
+
+      <main class="form-container">
+        <h3 class="text-h3 font-jp" style="margin-bottom:12px;">お店の評価 <span class="text-primary">*</span></h3>
+        <p class="text-secondary font-jp text-small mb-3">星をタップして評価を付けてください。</p>
+        
+        <div class="spec-box tight" data-spec-no="3" style="padding: 4px; display: inline-block; margin-bottom: 32px;">
+          <div class="star-rating" style="margin-bottom: 0;">
+            <i class="fa-solid fa-star active"></i>
+            <i class="fa-solid fa-star active"></i>
+            <i class="fa-solid fa-star active"></i>
+            <i class="fa-solid fa-star active"></i>
+            <i class="fa-regular fa-star"></i>
+          </div>
+        </div>
+
+        <h3 class="text-h3 font-jp mb-3">良かった点を選択 (複数可)</h3>
+        
+        <div class="tag-selector font-jp spec-box" data-spec-no="4" style="padding: 8px;">
+          <button class="tag-btn selected"><i class="fa-solid fa-check" style="margin-right:6px;"></i>日本人の口に合う</button>
+          <button class="tag-btn selected"><i class="fa-solid fa-check" style="margin-right:6px;"></i>清潔で安心</button>
+          <button class="tag-btn">接客が親切</button>
+          <button class="tag-btn">日本語メニューあり</button>
+          <button class="tag-btn">接待向き</button>
+          <button class="tag-btn">コスパが良い</button>
+        </div>
+
+        <h3 class="text-h3 font-jp mb-3">感想・レビュー <span class="text-primary">*</span></h3>
+        
+        <div class="spec-box" data-spec-no="5" style="padding: 4px; margin-bottom: 32px;">
+          <textarea class="review-text font-jp" style="margin-bottom: 0;" placeholder="料理の味、店内の雰囲気、サービスなどについて具体的に教えてください。あなたのレビューが他の駐在員や出張者の参考になります。"></textarea>
+        </div>
+
+        <h3 class="text-h3 font-jp mb-3">写真の追加 (任意)</h3>
+        
+        <div class="upload-area spec-box" data-spec-no="6">
+          <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+          <h4 class="font-jp" style="font-size:16px; margin-bottom:8px;">クリックまたはドラッグ＆ドロップで写真を 업ロード</h4>
+          <p class="text-secondary font-jp text-small">JPG, PNG (最大 5MB)</p>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 mt-5">
+          <div style="padding: 4px;">
+            <button class="btn btn-secondary font-jp spec-box tight" data-spec-no="7" style="padding: 14px 32px; border:1px solid var(--border-color); background:white;">キャンセル</button>
+          </div>
+          <div style="padding: 4px;">
+            <button class="btn btn-primary font-jp spec-box tight" data-spec-no="8" style="padding: 14px 48px; font-size:16px; border:none; color:white; background:var(--primary);" onclick="alert('レビューを投稿しました。ご協力ありがとうございます！')">レビューを投稿する</button>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+</body>
+</html>

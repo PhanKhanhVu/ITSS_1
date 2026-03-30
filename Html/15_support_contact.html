@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Support & Contact</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background: #F8F9FA; }
+    
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 70px);
+    }
+    
+    /* Store Sidebar Reuse */
+    .store-sidebar { background: #1C2331; color: white; padding: 32px 0; }
+    .store-brand { padding: 0 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
+    .store-nav a { display: flex; align-items: center; padding: 16px 24px; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; font-size: 15px; border-left: 4px solid transparent; transition: var(--transition); }
+    .store-nav a i { width: 24px; font-size: 18px; margin-right: 12px; }
+    .store-nav a:hover, .store-nav a.active { background: rgba(255,255,255,0.05); color: white; }
+    .store-nav a.active { border-left-color: var(--primary); }
+
+    .dashboard-content { padding: 40px; }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 32px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .form-group { margin-bottom: 24px; }
+    .form-group label { display: block; font-weight: 600; font-size: 15px; margin-bottom: 8px; color:var(--text-main); }
+    .form-control { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); font-size: 15px; font-family: inherit; transition: var(--transition); }
+    .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.1); }
+
+    /* FAQ Box */
+    .faq-box {
+      background: var(--bg-main);
+      border-radius: var(--border-radius-md);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 0;
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-weight: 600; color: var(--primary); margin-bottom: 8px; font-size: 14px;}
+    .faq-a { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar" style="box-shadow:none; border-bottom:1px solid #ddd;">
+    <div class="container d-flex align-items-center justify-content-between h-100" style="padding: 0 40px; max-width:100%;">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-shop" style="color:var(--primary); font-size:20px;"></i>
+        <span class="font-jp" style="font-weight:700; font-size:18px;">店舗管理システム - Phở Bát Đàn</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout animate-fade-in">
+    <!-- Sidebar -->
+    <aside class="store-sidebar font-jp">
+      <div class="store-brand"><div class="text-small" style="color:rgba(255,255,255,0.5);">管理メニュー</div></div>
+      <div class="store-nav">
+        <a href="11_store_dashboard.html"><i class="fa-solid fa-chart-pie"></i> ダッシュボード</a>
+        <a href="12_store_menu_edit.html"><i class="fa-solid fa-pen-to-square"></i> 店舗・メニュー編集</a>
+        <a href="13_reservation_management.html"><i class="fa-solid fa-calendar-check"></i> 予約管理</a>
+        <a href="14_analytics_report.html"><i class="fa-solid fa-chart-line"></i> 分析レポート</a>
+        <a href="15_support_contact.html" class="active"><i class="fa-solid fa-headset"></i> サポート・問い合わせ</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-content font-jp">
+      <h1 class="text-h1 text-main mb-4">サポートセンター (Trung tâm hỗ trợ)</h1>
+
+      <div class="support-grid">
+        
+        <!-- Contact Form -->
+        <div class="panel">
+          <h2 class="text-h2 mb-4">お問い合わせ (Liên hệ Admin)</h2>
+          
+          <div class="form-group">
+            <label>件名 (Chủ đề) <span class="text-primary">*</span></label>
+            <select class="form-control">
+              <option>システム不具合について (Lỗi hệ thống)</option>
+              <option>契約・請求について (Hợp đồng/Thanh toán)</option>
+              <option>悪質なレビューの報告 (Báo cáo đánh giá xấu)</option>
+              <option>その他 (Khác)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>詳細内容 (Chi tiết) <span class="text-primary">*</span></label>
+            <textarea class="form-control" style="min-height: 200px; resize:vertical;" placeholder="お問い合わせ内容を具体的にご記入ください..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>添付ファイル (File đính kèm - tùy chọn)</label>
+            <input type="file" class="form-control" style="padding:8px;">
+            <p class="text-small text-secondary mt-1">※ JPG, PNG, PDF (最大5MB)</p>
+          </div>
+
+          <button class="btn btn-primary" style="padding: 12px 32px; font-size:16px;" onclick="alert('送信しました。担当者からの連絡をお待ちください。')">
+            <i class="fa-solid fa-paper-plane" style="margin-right:8px;"></i> 送信する (Gửi)
+          </button>
+        </div>
+
+        <!-- FAQ -->
+        <div>
+          <div class="faq-box">
+            <h2 class="text-h3 mb-3"><i class="fa-regular fa-circle-question"></i> よくある質問 (FAQ)</h2>
+            
+            <div class="faq-item">
+              <div class="faq-q">Q: 予約をキャンセルするには？</div>
+              <div class="faq-a">予約管理画面から該当の予約を選択し、「キャンセル」ボタンを押してください。お客様に自動通知が送信されます。</div>
+            </div>
+            
+            <div class="faq-item">
+              <div class="faq-q">Q: メニューの翻訳はおかしい場合</div>
+              <div class="faq-a">店舗・メニュー編集画面で、AI翻訳結果を手動で上書き修正することが可能です。</div>
+            </div>
+
+            <div class="faq-item" style="border-bottom:none; margin-bottom:16px;">
+              <div class="faq-q">Q: 売上レポートの出力方法は？</div>
+              <div class="faq-a">分析レポート画面の右上にある「CSVダウンロード」ボタンから取得可能です。</div>
+            </div>
+
+            <a href="#" class="btn btn-secondary btn-block text-small" style="padding:10px;">FAQをすべて見る</a>
+          </div>
+          
+          <div class="faq-box mt-4" style="background:#fff3cd; border-color:#ffeeba;">
+            <h3 class="text-h3" style="color:#856404; font-size:14px;"><i class="fa-solid fa-phone"></i> 緊急時のヘルプデスク</h3>
+            <p style="font-size:13px; color:#533f03; margin-top:8px; font-weight:600;">TEL: 1900-XXXX-XXXX</p>
+            <p style="font-size:12px; color:#856404;">対応時間: 9:00 - 18:00 (平日のみ)</p>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

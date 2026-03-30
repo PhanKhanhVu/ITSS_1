@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Store & Menu Edit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background: #F8F9FA; }
+    
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 70px);
+    }
+    
+    /* Reuse Store Sidebar */
+    .store-sidebar { background: #1C2331; color: white; padding: 32px 0; }
+    .store-brand { padding: 0 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px; }
+    .store-nav a { display: flex; align-items: center; padding: 16px 24px; color: rgba(255,255,255,0.7); text-decoration: none; font-weight: 500; font-size: 15px; border-left: 4px solid transparent; transition: var(--transition); }
+    .store-nav a i { width: 24px; font-size: 18px; margin-right: 12px; }
+    .store-nav a:hover, .store-nav a.active { background: rgba(255,255,255,0.05); color: white; }
+    .store-nav a.active { border-left-color: var(--primary); }
+
+    .dashboard-content { padding: 40px; }
+
+    .panel {
+      background: white;
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+      margin-bottom: 32px;
+    }
+
+    .form-group { margin-bottom: 24px; }
+    .form-group label { display: block; font-weight: 600; font-size: 15px; margin-bottom: 8px; color:var(--text-main); }
+    .form-control { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: var(--border-radius-sm); font-size: 15px; font-family: inherit; transition: var(--transition); }
+    .form-control:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.1); }
+
+    /* AI Translation Tool UI */
+    .ai-translate-box {
+      background: linear-gradient(to right, #f2f6fa, #eef2f5);
+      border: 1px solid #dce4ec;
+      border-radius: var(--border-radius-md);
+      padding: 24px;
+      position: relative;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .translate-grid {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    /* Menu List */
+    .menu-edit-item {
+      display: flex;
+      align-items: center;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      margin-bottom: 16px;
+      gap: 24px;
+    }
+
+    .menu-edit-img {
+      width: 100px;
+      height: 100px;
+      border-radius: var(--border-radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .menu-edit-content { flex: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar" style="box-shadow:none; border-bottom:1px solid #ddd;">
+    <div class="container d-flex align-items-center justify-content-between h-100" style="padding: 0 40px; max-width:100%;">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-shop" style="color:var(--primary); font-size:20px;"></i>
+        <span class="font-jp" style="font-weight:700; font-size:18px;">店舗管理システム - Phở Bát Đàn</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-layout animate-fade-in">
+    <!-- Sidebar -->
+    <aside class="store-sidebar font-jp">
+      <div class="store-brand"><div class="text-small" style="color:rgba(255,255,255,0.5);">管理メニュー</div></div>
+      <div class="store-nav">
+        <a href="11_store_dashboard.html"><i class="fa-solid fa-chart-pie"></i> ダッシュボード (Tổng quan)</a>
+        <a href="12_store_menu_edit.html" class="active"><i class="fa-solid fa-pen-to-square"></i> 店舗・メニュー編集 (Sửa Info)</a>
+        <a href="#"><i class="fa-solid fa-calendar-check"></i> 予約管理 (Quản lý đặt bàn)</a>
+        <a href="#"><i class="fa-solid fa-star"></i> レビュー管理 (Quản lý đánh giá)</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-content font-jp">
+      <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <h1 class="text-h1 text-main">店舗とメニューの編集</h1>
+          <p class="text-secondary mt-1">Sửa thông tin cơ bản và thực đơn (Hỗ trợ dịch chuẩn Nhật).</p>
+        </div>
+        <button class="btn btn-primary" onclick="alert('変更を保存しました！(Saved)')"><i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i> 保存する (Lưu)</button>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="panel">
+        <h2 class="text-h2 mb-4">基本情報 (Thông tin cơ bản)</h2>
+        <div class="grid grid-cols-2">
+          <div class="form-group">
+            <label>店舗名 (Tên quán) <span class="text-primary">*</span></label>
+            <input type="text" class="form-control" value="Phở Bát Đàn">
+          </div>
+          <div class="form-group">
+            <label>電話番号 (Số điện thoại)</label>
+            <input type="text" class="form-control" value="024 3824 3250">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>住所 (Địa chỉ) <span class="text-primary">*</span></label>
+          <input type="text" class="form-control" value="49 Bát Đàn, Cửa Đông, Hoàn Kiếm, Hà Nội">
+        </div>
+        
+        <div class="form-group mb-0">
+          <label>お店の紹介 (Giới thiệu)</label>
+          
+          <div class="ai-translate-box mt-2">
+            <div class="ai-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Dịch Tự Động (AI自動翻訳)</div>
+            
+            <div class="translate-grid">
+              <div>
+                <p class="text-small mb-1 font-weight-bold">Tiếng Việt</p>
+                <textarea class="form-control" style="min-height:120px; resize:vertical;">Đây là quán phở gia truyền lâu đời bậc nhất Hà Nội. Nước dùng thanh ngọt, thịt bò mềm. Rất phù hợp cho khách Nhật.</textarea>
+              </div>
+              <div class="text-center">
+                <button class="btn btn-secondary" style="padding:12px; border-radius:50%;"><i class="fa-solid fa-language text-primary font-size-20"></i></button>
+              </div>
+              <div>
+                <p class="text-small mb-1 font-weight-bold">Tiếng Nhật (Đã dịch)</p>
+                <textarea class="form-control" style="min-height:120px; resize:vertical; background:white;">これはハノイで最も歴史のある伝統的なフォーの店の一つです。クリアで甘みのあるスープと柔らかい牛肉が特徴です。日本人のお客様にも非常に適しています。</textarea>
+              </div>
+            </div>
+            <p class="text-small mt-3 text-secondary text-right"><i class="fa-solid fa-circle-check" style="color:var(--accent-green);"></i> AIが自然な日本語に翻訳・最適化しました</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu List -->
+      <div class="panel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="text-h2">メニュー管理 (Quản lý Menu)</h2>
+          <button class="btn btn-secondary" style="border-color:var(--primary); color:var(--primary);"><i class="fa-solid fa-plus"></i> 新規追加 (Thêm món mới)</button>
+        </div>
+
+        <div class="menu-list">
+          
+          <div class="menu-edit-item">
+            <img src="https://halotravel.vn/wp-content/uploads/2020/10/pho-bat-dan3-e1603927789230.jpg?auto=format&fit=crop&w=200&q=80" class="menu-edit-img" alt="Pho">
+            <div class="menu-edit-content">
+              <div class="d-flex justify-content-between mb-2">
+                <input type="text" class="form-control" value="牛肉のフォー・ハーフ＆ハーフ (Phở Tái Nạm)" style="font-size:18px; font-weight:700; width: 60%;">
+                <input type="text" class="form-control" value="60,000 VND" style="width: 20%; text-align:right;">
+              </div>
+              <input type="text" class="form-control" value="半生牛肉とよく煮込まれた牛肉が両方楽しめる一番人気のメニュー。" style="font-size:14px; margin-bottom:12px;">
+              <div class="d-flex gap-2">
+                <span class="badge badge-gray" style="border:1px solid #ddd;">辛さ: なし</span>
+                <span class="badge badge-gray" style="border:1px solid #ddd;">おすすめマーク</span>
+              </div>
+            </div>
+            <div class="d-flex flex-column gap-1">
+              <button class="btn btn-secondary" style="padding:10px;"><i class="fa-solid fa-image"></i></button>
+              <button class="btn btn-secondary" style="padding:10px; color:#e74c3c;"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

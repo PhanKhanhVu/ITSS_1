@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Restaurant Details (Desktop)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Detail Page Layout */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+      height: 480px;
+      border-radius: var(--border-radius-lg);
+      overflow: hidden; /* Cắt ảnh bo góc */
+    }
+    
+    .gallery-main {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .gallery-sub {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      height: 100%;
+    }
+    
+    .gallery-sub img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 60px;
+      position: relative;
+    }
+
+    /* Info Sections */
+    .info-section {
+      padding-bottom: 40px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .info-section:last-child {
+      border-bottom: none;
+    }
+
+    .badge-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* Menu Card */
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .spicy-level {
+      display: flex;
+      gap: 4px;
+      color: var(--primary);
+    }
+    .spicy-level .inactive { color: #E5E5EA; }
+
+    /* Review Card */
+    .review-card {
+      background: #fafafa;
+      border-radius: var(--border-radius-md);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    /* Sidebar Booking Widget */
+    .booking-widget-wrapper {
+      position: sticky;
+      top: 100px;
+    }
+
+    .booking-widget {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 32px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Quick Info Banner */
+    .quick-info-row {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      background: #fafafa;
+      padding: 24px;
+      border-radius: var(--border-radius-md);
+      margin-top: 24px;
+    }
+
+    .quick-info-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .quick-info-item i {
+      font-size: 24px;
+      color: var(--primary);
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* =========================================
+       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (CẬP NHẬT GỌN HƠN)
+       ========================================= */
+    body {
+      overflow-x: hidden;
+      padding-top: 24px; /* Chừa khoảng trống phía trên cho số 1 & 2 */
+      padding-bottom: 24px; /* Chừa khoảng trống phía dưới cho số 14 */
+    }
+    
+    .spec-box {
+      position: relative;
+      display: block;
+    }
+    
+    /* Box đỏ bao quanh - bo sát hơn */
+    .spec-box::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border: 2px solid #D32F2F;
+      border-radius: 8px;
+      pointer-events: none; 
+      z-index: 100;
+    }
+    
+    /* Số thứ tự dạng Badge tròn */
+    .spec-box::before {
+      content: attr(data-spec-no);
+      position: absolute;
+      top: -16px;
+      left: -16px; 
+      width: 28px;
+      height: 28px;
+      background-color: #D32F2F;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      z-index: 101;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Style riêng cho các nút bấm (button/link) để ôm sát hơn */
+    .spec-box.tight::after {
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-width: 2px;
+      border-style: dashed; /* Dùng viền nét đứt cho các nút bấm để phân biệt với khối lớn */
+    }
+    .spec-box.tight::before {
+      top: -10px;
+      left: -10px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+    /* ========================================= */
+  </style>
+</head>
+<body>
+
+  <nav class="navbar mb-4">
+    <div class="container d-flex align-items-center justify-content-between h-100">
+      
+      <div class="d-flex align-items-center gap-3 spec-box" data-spec-no="1" style="padding: 8px;">
+        <a href="1_home.html" class="nav-brand">
+          <i class="fa-solid fa-bowl-rice"></i> JP Food
+        </a>
+        <div class="nav-links">
+          <a href="1_home.html" class="font-jp">ホーム</a>
+          <a href="2_search_results.html" class="font-jp">検索</a>
+        </div>
+      </div>
+      
+      <div class="nav-actions spec-box tight" data-spec-no="2" style="padding: 4px;">
+        <button class="icon-btn"><i class="fa-regular fa-heart"></i></button>
+        <button class="icon-btn"><i class="fa-solid fa-share-nodes"></i></button>
+      </div>
+
+    </div>
+  </nav>
+
+  <div class="container mt-4 animate-fade-in">
+    
+    <div class="spec-box mb-5" data-spec-no="3">
+      <div class="gallery-grid">
+        <img src="https://halotravel.vn/wp-content/uploads/2020/10/pho-bat-dan3-e1603927789230.jpg" class="gallery-main" alt="Main Photo">
+        <div class="gallery-sub">
+          <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Sub Photo 1">
+          <img src="https://images.unsplash.com/photo-1582878826629-29b7ad1cb431?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Sub Photo 2">
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-layout mb-5">
+      
+      <div class="main-info">
+        
+        <div class="info-section">
+          <div class="spec-box mb-4" data-spec-no="4" style="padding: 8px;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h1 class="text-h1 font-jp">Phở Bát Đàn (フォー・バッダン)</h1>
+              <div class="rating" style="background:var(--accent-gold); color:white; padding:8px 16px; border-radius:8px; font-size:18px;"><i class="fa-solid fa-star"></i> 4.8</div>
+            </div>
+            <p class="text-secondary font-jp text-h3 m-0"><i class="fa-solid fa-location-dot" style="margin-right:8px;"></i>49 Bát Đàn, Cửa Đông, Hoàn Kiếm, Hà Nội</p>
+          </div>
+          
+          <div class="badge-wrap mb-4 spec-box" data-spec-no="5" style="padding: 8px;">
+            <span class="badge badge-green" style="font-size:14px; padding:6px 12px; background:white; border:1px solid var(--accent-green);"><i class="fa-solid fa-check-circle" style="margin-right:6px;"></i>衛生認証（市指定）</span>
+            <span class="badge badge-gray" style="font-size:14px; padding:6px 12px;">日本語対応スタッフ在籍</span>
+            <span class="badge badge-gray" style="font-size:14px; padding:6px 12px;">現金のみ</span>
+          </div>
+
+          <div class="quick-info-row spec-box" data-spec-no="6">
+            <div class="quick-info-item">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <div class="text-small font-jp">営業時間</div>
+                <div class="font-jp" style="font-weight:600;">06:00 - 10:00, 18:00 - 20:30</div>
+              </div>
+            </div>
+            <div class="quick-info-item">
+              <i class="fa-solid fa-phone"></i>
+              <div>
+                <div class="text-small font-jp">電話番号</div>
+                <div class="font-jp" style="font-weight:600;">+84 24 3824 3250</div>
+              </div>
+            </div>
+            <div class="quick-info-item">
+              <i class="fa-solid fa-yen-sign"></i>
+              <div>
+                <div class="text-small font-jp">予算</div>
+                <div class="font-jp" style="font-weight:600;">約 300 - 500 JPY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section spec-box" data-spec-no="7" style="padding: 16px;">
+          <h2 class="text-h2 font-jp mb-4">日本人へのおすすめメニュー</h2>
+          
+          <div class="menu-item">
+            <div style="max-width: 60%">
+              <h3 class="text-h3 font-jp">牛肉のフォー・ハーフ＆ハーフ（Phở Tái Nạm）</h3>
+              <p class="text-secondary font-jp mt-1" style="font-size:14px; line-height:1.6;">半生牛肉とよく煮込まれた牛肉が両方楽しめる一番人気のメニュー。クセの少ないクリアな牛骨スープが日本人の味覚にマッチします。</p>
+              <div class="spicy-level mt-2" style="font-size: 14px;">
+                <span class="text-small font-jp" style="margin-right:8px;">辛さ:</span>
+                <i class="fa-solid fa-pepper-hot"></i>
+                <i class="fa-solid fa-pepper-hot inactive"></i>
+                <i class="fa-solid fa-pepper-hot inactive"></i>
+                <span class="text-small font-jp" style="margin-left:8px;">ご自身でチリを入れて調節可能です</span>
+              </div>
+            </div>
+            <div style="font-weight:700; font-size:20px; color:var(--text-main);">
+              60,000 VND
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <div style="max-width: 60%">
+              <h3 class="text-h3 font-jp">揚げパン（Quẩy）</h3>
+              <p class="text-secondary font-jp mt-1" style="font-size:14px; line-height:1.6;">フォーのスープを吸わせて食べる揚げパン。サクサクの食感からモチモチの食感への変化を楽しめます。</p>
+              <div class="spicy-level mt-2" style="font-size: 14px;">
+                <span class="text-small font-jp" style="margin-right:8px;">辛さ:</span>全くなし
+              </div>
+            </div>
+            <div style="font-weight:700; font-size:20px; color:var(--text-main);">
+              10,000 VND <span style="font-size:14px; font-weight:400; color:var(--text-secondary);">/ 1皿</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section spec-box" data-spec-no="8" style="padding: 16px;">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-h2 font-jp">口コミ・評価 <span style="font-size:16px; font-weight:400; color:var(--text-secondary);">(日本人レビュー 124件)</span></h2>
+          </div>
+          
+          <div class="review-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-3">
+                <div style="width:48px; height:48px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:20px;">T</div>
+                <div>
+                  <div class="font-jp" style="font-weight:600; font-size:16px;">Tanaka M.</div>
+                  <div class="text-small">2026年3月15日</div>
+                </div>
+              </div>
+              <div class="rating"><i class="fa-solid fa-star"></i> 5.0</div>
+            </div>
+            <p class="font-jp" style="font-size: 15px; line-height:1.6;">
+              店内がとても清潔で、テーブルもベトつかず安心して食事ができました。ローカル感はありますが店員さんが日本人の対応に慣れており、注文もスムーズでした。スープも優しくて日本人の口に合います！出張者におすすめです。
+            </p>
+          </div>
+          
+          <div style="padding: 4px;">
+            <button class="btn btn-secondary btn-block font-jp spec-box tight" data-spec-no="9" style="padding:16px; font-size:16px; width: 100%;">すべてのレビューを読む</button>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="sidebar-info">
+        <div class="booking-widget-wrapper">
+          
+          <div class="booking-widget spec-box mb-4" data-spec-no="10">
+            <h3 class="text-h2 font-jp mb-1">予約する</h3>
+            <p class="text-secondary font-jp text-small mb-4">このお店はオンライン予約が可能です</p>
+
+            <div style="background:var(--bg-main); border-radius:var(--border-radius-sm); padding:16px; margin-bottom:24px;">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="font-jp font-weight-bold">おまかせコース</span>
+                <span style="font-weight:600;">500,000VND〜</span>
+              </div>
+              <ul class="text-small font-jp" style="padding-left:16px; color:var(--text-secondary);">
+                <li>前菜盛り合わせ</li>
+                <li>伝統フォー</li>
+                <li>デザート</li>
+                <li style="color:var(--primary); font-weight:600; margin-top:4px;">※接待に最適な飲み物込みコース</li>
+              </ul>
+            </div>
+
+            <div style="padding: 4px;">
+              <a href="4_booking_form.html" class="btn btn-primary btn-block font-jp spec-box tight" data-spec-no="11" style="padding: 16px; font-size: 16px; display: block; text-align: center;">
+                予約手続きへ進む
+              </a>
+            </div>
+            
+            <p class="text-small font-jp mt-3" style="text-align:center; color:var(--text-secondary);">即時予約ではありません。<br>店舗からの確認をもって確定します。</p>
+          </div>
+          
+          <div class="spec-box" data-spec-no="12" style="border-radius:var(--border-radius-md); border:1px solid var(--border-color); background: white;">
+            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&w=600&q=80" style="width:100%; height:200px; object-fit:cover; border-top-left-radius: inherit; border-top-right-radius: inherit;" alt="Map">
+            
+            <div style="padding:16px;">
+              <div class="spec-box tight" data-spec-no="13" style="display: block; text-align: center; padding: 4px;">
+                <a href="#" class="font-jp" style="color:var(--primary); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                  <i class="fa-solid fa-map-location-dot"></i> Google Mapsで開く
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <footer class="footer mt-5">
+    <div class="container d-flex justify-content-between align-items-center spec-box" data-spec-no="14" style="padding: 12px;">
+      <div class="font-jp text-secondary">
+        &copy; 2026 JP Food. All rights reserved.
+      </div>
+      <div class="nav-links">
+        <a href="#" class="font-jp">トップへ戻る</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

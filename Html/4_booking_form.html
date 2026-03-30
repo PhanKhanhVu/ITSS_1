@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JP Food - Booking Form (Desktop)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Booking Form Layout */
+    .booking-layout {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 60px;
+      padding: 40px 0 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .form-section {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .form-group {
+      margin-bottom: 32px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* Date Selection */
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    
+    .date-card {
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-surface);
+    }
+    
+    .date-card:hover {
+      border-color: var(--primary);
+    }
+
+    .date-card.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(218, 41, 28, 0.2);
+    }
+    
+    .date-card .day { font-size: 13px; opacity: 0.9; }
+    .date-card .date { font-size: 24px; font-weight: 700; }
+
+    /* Time Selection */
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    
+    .time-slot {
+      padding: 14px 0;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--bg-surface);
+    }
+    
+    .time-slot:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .time-slot.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(218, 41, 28, 0.2);
+    }
+
+    /* Counter */
+    .counter-widget {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 8px;
+    }
+    
+    .counter-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-main);
+      transition: var(--transition);
+    }
+
+    .counter-btn:hover { background: #E5E5EA; }
+    
+    .counter-val {
+      font-weight: 600;
+      font-size: 20px;
+      width: 60px;
+      text-align: center;
+    }
+
+    /* Course Selection */
+    .menu-select {
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 24px;
+      background: var(--bg-surface);
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    
+    .menu-select:hover {
+      border-color: #f7a6a0;
+    }
+
+    .menu-select.active {
+      border-color: var(--primary);
+      background: rgba(218, 41, 28, 0.02);
+    }
+    
+    .radio-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .menu-select.active .radio-circle {
+      border-color: var(--primary);
+    }
+    
+    .menu-select.active .radio-circle::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    textarea.form-control {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-md);
+      padding: 16px;
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+      resize: vertical;
+      min-height: 120px;
+      transition: var(--transition);
+    }
+
+    textarea.form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(218, 41, 28, 0.1);
+    }
+
+    /* Summary Sidebar */
+    .summary-sidebar {
+      position: sticky;
+      top: 100px;
+    }
+
+    .summary-card {
+      background: var(--bg-surface);
+      border-radius: var(--border-radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    /* =========================================
+       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (SPEC ANNOTATIONS)
+       ========================================= */
+    body {
+      overflow-x: hidden;
+      padding-top: 24px; /* Chừa khoảng trống phía trên cho số 1 */
+      padding-bottom: 24px; /* Chừa khoảng trống phía dưới */
+    }
+    
+    .spec-box {
+      position: relative;
+      display: block;
+    }
+    
+    /* Box đỏ bao quanh */
+    .spec-box::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      border: 2px solid #D32F2F;
+      border-radius: 8px;
+      pointer-events: none; 
+      z-index: 100;
+    }
+    
+    /* Số thứ tự dạng Badge tròn */
+    .spec-box::before {
+      content: attr(data-spec-no);
+      position: absolute;
+      top: -16px;
+      left: -16px; 
+      width: 28px;
+      height: 28px;
+      background-color: #D32F2F;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      z-index: 101;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Style riêng cho các nút bấm (button/link) */
+    .spec-box.tight::after {
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-width: 2px;
+      border-style: dashed;
+    }
+    .spec-box.tight::before {
+      top: -10px;
+      left: -10px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+    /* ========================================= */
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" style="border-bottom: 1px solid var(--border-color); box-shadow:none;">
+    <div class="container d-flex align-items-center justify-content-between h-100 spec-box" data-spec-no="1" style="padding: 4px;">
+      <div class="d-flex align-items-center gap-3">
+        <a href="1_home.html" class="nav-brand">
+          <i class="fa-solid fa-bowl-rice"></i> JP Food
+        </a>
+      </div>
+      <div class="font-jp" style="font-size:18px; font-weight:600;">予約フォーム</div>
+      <div style="width:120px;"></div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="booking-layout animate-fade-in">
+      
+      <div class="form-section">
+        
+        <div class="form-group spec-box" data-spec-no="2" style="padding: 8px;">
+          <label class="form-label font-jp">日付を選択 <span class="text-primary">*</span></label>
+          <div class="date-grid">
+            <div class="date-card">
+              <span class="day font-jp">今日</span>
+              <span class="date">15</span>
+            </div>
+            <div class="date-card active">
+              <span class="day font-jp">明日</span>
+              <span class="date">16</span>
+            </div>
+            <div class="date-card">
+              <span class="day font-jp">水</span>
+              <span class="date">17</span>
+            </div>
+            <div class="date-card">
+              <span class="day font-jp">木</span>
+              <span class="date">18</span>
+            </div>
+            <div class="date-card">
+              <span class="day font-jp">金</span>
+              <span class="date">19</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group spec-box" data-spec-no="3" style="margin-top:40px; padding: 8px;">
+          <label class="form-label font-jp">時間を選択 <span class="text-primary">*</span></label>
+          <div class="time-grid">
+            <div class="time-slot">18:00</div>
+            <div class="time-slot">18:30</div>
+            <div class="time-slot active">19:00</div>
+            <div class="time-slot">19:30</div>
+            <div class="time-slot">20:00</div>
+            <div class="time-slot">20:30</div>
+            <div class="time-slot">21:00</div>
+            <div class="time-slot">21:30</div>
+          </div>
+        </div>
+
+        <div class="form-group spec-box" data-spec-no="4" style="margin-top:40px; padding: 8px;">
+          <label class="form-label font-jp">人数 <span class="text-primary">*</span></label>
+          <div class="counter-widget">
+            <button class="counter-btn"><i class="fa-solid fa-minus"></i></button>
+            <span class="counter-val font-jp">4名</span>
+            <button class="counter-btn"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="form-group spec-box" data-spec-no="5" style="margin-top:40px; padding: 8px;">
+          <label class="form-label font-jp">コース選択 <span class="text-primary">*</span></label>
+          
+          <div class="menu-select active">
+            <div class="radio-circle"></div>
+            <div>
+              <h4 class="font-jp" style="font-size: 18px; margin-bottom: 8px;">お任せコース（飲み物込み）</h4>
+              <p class="text-body font-jp mb-2" style="color:var(--text-secondary); line-height:1.6;">接待や懇親会に最適。人気のベトナム料理を集めたセットメニューで、現地での注文の手間が省けます。</p>
+              <span style="font-weight: 700; color: var(--primary); font-size:18px;">500,000 VND / 人</span>
+            </div>
+          </div>
+
+          <div class="menu-select">
+            <div class="radio-circle"></div>
+            <div>
+              <h4 class="font-jp" style="font-size: 18px; margin-bottom: 8px;">席のみ予約</h4>
+              <p class="text-body font-jp mb-0" style="color:var(--text-secondary); line-height:1.6;">メニューはご来店時に店舗でお決めいただけます。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group spec-box" data-spec-no="6" style="margin-top:40px; margin-bottom:0; padding: 8px;">
+          <label class="form-label font-jp">特別なご要望（任意）</label>
+          <textarea class="form-control font-jp" placeholder="アレルギー、サプライズのご要望、領収書などについてご記入ください..."></textarea>
+        </div>
+
+      </div>
+
+      <div class="summary-sidebar">
+        <div class="summary-card spec-box" data-spec-no="7">
+          <h3 class="text-h2 font-jp mb-4" style="border-bottom:1px solid var(--border-color); padding-bottom:16px;">ご予約内容</h3>
+          
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <img src="https://loremflickr.com/800/600/food?lock=1" alt="Restaurant" style="width: 80px; height: 80px; border-radius:12px; object-fit:cover;">
+            <div>
+              <h4 class="font-jp" style="font-size:18px; margin-bottom:4px;">Phở Bát Đàn</h4>
+              <p class="text-small font-jp"><i class="fa-solid fa-location-dot" style="margin-right:4px;"></i>Hoan Kiem, Hanoi</p>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-3 font-jp">
+            <span class="text-secondary"><i class="fa-regular fa-calendar" style="width:24px;"></i> 日時</span>
+            <span style="font-weight:600; font-size:16px;">3月16日(火) 19:00</span>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center mb-3 font-jp">
+            <span class="text-secondary"><i class="fa-solid fa-users" style="width:24px;"></i> 人数</span>
+            <span style="font-weight:600; font-size:16px;">4名様</span>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-start mb-4 font-jp">
+            <span class="text-secondary"><i class="fa-solid fa-utensils" style="width:24px;"></i> コース</span>
+            <div style="text-align:right;">
+              <div style="font-weight:600; font-size:16px; margin-bottom:4px;">お任せコース</div>
+              <div class="text-small">500,000 VND × 4</div>
+            </div>
+          </div>
+
+          <div style="border-top:2px dashed var(--border-color); padding-top:24px; margin-bottom:32px;">
+            <div class="d-flex justify-content-between align-items-center font-jp">
+              <span style="font-size:18px; font-weight:600;">概算合計</span>
+              <span style="font-size:24px; font-weight:700; color:var(--primary);">2,000,000 VND</span>
+            </div>
+            <p class="text-small font-jp mt-2" style="text-align:right;">(約 12,000 JPY)</p>
+          </div>
+
+          <div style="padding: 4px;">
+            <button class="btn btn-primary btn-block font-jp mt-4 spec-box tight" data-spec-no="8" style="padding: 16px; font-size: 18px; box-shadow: 0 8px 20px rgba(218, 41, 28, 0.3); width: 100%;" onclick="alert('予約リクエストを送信しました！(Booking Request Sent)')">
+              予約リクエストを送信
+            </button>
+          </div>
+          
+          <p class="text-small font-jp mt-3" style="text-align:center; color:var(--text-secondary); line-height:1.5;">
+            こちらはリクエスト予約です。<br>
+            店舗から確定の連絡にて予約完了となります。
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
