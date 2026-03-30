@@ -86,6 +86,7 @@
       display: flex;
       justify-content: space-between;
       margin-top: 32px;
+      gap: 16px; /* Thêm khoảng cách đều giữa các item */
     }
     
     .category-item {
@@ -123,6 +124,7 @@
     .category-item span {
       font-weight: 500;
       font-size: 15px;
+      text-align: center;
     }
 
     /* Restaurant Cards Layout */
@@ -137,7 +139,7 @@
       height: 100%;
       text-decoration: none;
       color: inherit;
-      position: relative; /* Thêm relative cho spec-box */
+      position: relative;
     }
 
     .restaurant-card .card-img {
@@ -166,20 +168,19 @@
     }
 
     /* =========================================
-       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (SPEC ANNOTATIONS)
+       CSS TẠO KHUNG ĐỎ VÀ ĐÁNH SỐ (ĐÃ FIX LỖI FLEXBOX)
        ========================================= */
     body {
       overflow-x: hidden;
-      padding-top: 24px; /* Chừa khoảng trống cho header */
+      padding-top: 24px; 
       padding-bottom: 24px;
     }
     
     .spec-box {
       position: relative;
-      display: block;
+      /* ĐÃ XÓA display: block; ĐỂ KHÔNG PHÁ VỠ CẤU TRÚC FLEXBOX NẰM NGANG */
     }
     
-    /* Box đỏ bao quanh */
     .spec-box::after {
       content: '';
       position: absolute;
@@ -190,7 +191,6 @@
       z-index: 100;
     }
     
-    /* Số thứ tự dạng Badge tròn */
     .spec-box::before {
       content: attr(data-spec-no);
       position: absolute;
@@ -211,7 +211,11 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
 
-    /* Style riêng cho các nút bấm (button/link/search) */
+    .spec-box.tight {
+      width: max-content;
+      display: inline-block;
+    }
+
     .spec-box.tight::after {
       top: -2px; left: -2px; right: -2px; bottom: -2px;
       border-width: 2px;
@@ -237,10 +241,10 @@
           <i class="fa-solid fa-bowl-rice"></i> JP Food
         </a>
         <div class="nav-links d-flex gap-3">
-          <a href="1_home.html" class="active font-jp" style="color:var(--primary); font-weight:bold;">ホーム</a>
-          <a href="2_search_results.html" class="font-jp">検索</a>
-          <a href="#" class="font-jp">ランキング</a>
-          <a href="#" class="font-jp">コラム</a>
+          <a href="1_home.html" class="active font-jp" style="color:var(--primary); font-weight:bold; text-decoration:none;">ホーム</a>
+          <a href="2_search_results.html" class="font-jp" style="text-decoration:none;">検索</a>
+          <a href="#" class="font-jp" style="text-decoration:none;">ランキング</a>
+          <a href="#" class="font-jp" style="text-decoration:none;">コラム</a>
         </div>
       </div>
       
@@ -250,8 +254,8 @@
       </div>
 
       <div class="nav-actions d-flex align-items-center gap-3 spec-box" data-spec-no="3" style="padding: 4px;">
-        <button class="icon-btn" style="border:none; background:none; font-size:20px;"><i class="fa-regular fa-heart"></i></button>
-        <button class="icon-btn" style="position: relative; border:none; background:none; font-size:20px;">
+        <button class="icon-btn" style="border:none; background:none; font-size:20px; cursor:pointer;"><i class="fa-regular fa-heart"></i></button>
+        <button class="icon-btn" style="position: relative; border:none; background:none; font-size:20px; cursor:pointer;">
           <i class="fa-regular fa-bell"></i>
           <span style="position: absolute; top: 0px; right: 0px; width: 8px; height: 8px; background: var(--primary); border-radius: 50%;"></span>
         </button>
@@ -272,7 +276,7 @@
         
         <div class="hero-search-box spec-box tight" data-spec-no="5" style="margin-bottom: 24px;">
           <i class="fa-solid fa-location-dot" style="color:var(--text-secondary); margin-left:8px; font-size:20px;"></i>
-          <input type="text" class="font-jp" placeholder="ハノイ, フォー, 接待...">
+          <input type="text" class="font-jp" placeholder="ハノイ, フォー, 接待..." style="background:transparent;">
           <a href="2_search_results.html" class="btn btn-primary font-jp" style="text-decoration:none; border-radius:var(--border-radius-full); display:flex; align-items:center;">検索する</a>
         </div>
         
